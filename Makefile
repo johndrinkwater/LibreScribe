@@ -11,30 +11,20 @@ AR = ar
 LD = g++
 WINDRES = windres
 
-INC = -I/usr/include/libxml2 -Iinclude
-CFLAGS = -Wall `wx-config --cflags` -Winvalid-pch -include wx_pch.h `python-config --includes` `pkg-config --libs --cflags glib-2.0` -DWX_PRECOMP `pkg-config --cflags libusb-1.0`
-RESINC =
+CFLAGS = -Wall `wx-config --cflags` -Winvalid-pch -include wx_pch.h	`python-config --includes` `pkg-config --cflags glib-2.0` -DWX_PRECOMP `pkg-config --cflags libxml-2.0` `pkg-config --cflags libusb-1.0` -Iinclude 
 LIBDIR =
-LIB = -lopenobex -lxml2 -ludev `pkg-config --libs --cflags libusb-1.0`
-LDFLAGS = `wx-config --libs` `python-config --libs` -lglib-2.0 `wx-config --cflags` -Winvalid-pch -include wx_pch.h `pkg-config --libs --cflags glib-2.0`
-
-INC_DEBUG = $(INC)
+LDFLAGS = `wx-config --libs` -Winvalid-pch -include wx_pch.h `python-config --libs` `pkg-config --libs glib-2.0` `pkg-config --libs libxml-2.0` `pkg-config --libs openobex` `pkg-config --libs libudev` `pkg-config --libs libusb-1.0`
 CFLAGS_DEBUG = $(CFLAGS) -O3 -g
-RESINC_DEBUG = $(RESINC)
 RCFLAGS_DEBUG = $(RCFLAGS)
 LIBDIR_DEBUG = $(LIBDIR)
-LIB_DEBUG = $(LIB)
 LDFLAGS_DEBUG = $(LDFLAGS)
 OBJDIR_DEBUG = ./obj/Debug
 DEP_DEBUG =
 OUT_DEBUG = ./bin/Debug/LibreScribe
 
-INC_RELEASE = $(INC)
 CFLAGS_RELEASE = $(CFLAGS) -O3
-RESINC_RELEASE = $(RESINC)
 RCFLAGS_RELEASE = $(RCFLAGS)
 LIBDIR_RELEASE = $(LIBDIR)
-LIB_RELEASE = $(LIB)
 LDFLAGS_RELEASE = -s $(LDFLAGS)
 OBJDIR_RELEASE = ./obj/Release
 DEP_RELEASE =
@@ -65,25 +55,25 @@ build_debug: before_debug out_debug after_debug
 debug: before_build build_debug after_build
 
 out_debug: $(OBJ_DEBUG) $(DEP_DEBUG)
-	$(LD) -o $(OUT_DEBUG) $(OBJ_DEBUG) $(LDFLAGS_DEBUG) $(LIBDIR_DEBUG) $(LIB_DEBUG)
+	$(LD) -o $(OUT_DEBUG) $(OBJ_DEBUG) $(LDFLAGS_DEBUG) $(LIBDIR_DEBUG)
 
 $(OBJDIR_DEBUG)/src/AboutDialog.o: src/AboutDialog.cc
-	$(CC) -o $(OBJDIR_DEBUG)/src/AboutDialog.o $(CFLAGS_DEBUG) $(INC_DEBUG) -c src/AboutDialog.cc
+	$(CC) -o $(OBJDIR_DEBUG)/src/AboutDialog.o $(CFLAGS_DEBUG) -c src/AboutDialog.cc
 
 $(OBJDIR_DEBUG)/src/DeviceInfo.o: src/DeviceInfo.cc
-	$(CC) -o $(OBJDIR_DEBUG)/src/DeviceInfo.o $(CFLAGS_DEBUG) $(INC_DEBUG) -c src/DeviceInfo.cc
+	$(CC) -o $(OBJDIR_DEBUG)/src/DeviceInfo.o $(CFLAGS_DEBUG) -c src/DeviceInfo.cc
 
 $(OBJDIR_DEBUG)/src/GUIFrame.o: src/GUIFrame.cc
-	$(CC) -o $(OBJDIR_DEBUG)/src/GUIFrame.o $(CFLAGS_DEBUG) $(INC_DEBUG) -c src/GUIFrame.cc
+	$(CC) -o $(OBJDIR_DEBUG)/src/GUIFrame.o $(CFLAGS_DEBUG) -c src/GUIFrame.cc
 
 $(OBJDIR_DEBUG)/src/LibreScribe.o: src/LibreScribe.cc
-	$(CC) -o $(OBJDIR_DEBUG)/src/LibreScribe.o $(CFLAGS_DEBUG) $(INC_DEBUG) -c src/LibreScribe.cc
+	$(CC) -o $(OBJDIR_DEBUG)/src/LibreScribe.o $(CFLAGS_DEBUG) -c src/LibreScribe.cc
 
 $(OBJDIR_DEBUG)/src/BackgroundMonitor.o: src/BackgroundMonitor.cc
-	$(CC) -o $(OBJDIR_DEBUG)/src/BackgroundMonitor.o $(CFLAGS_DEBUG) $(INC_DEBUG) -c src/BackgroundMonitor.cc
+	$(CC) -o $(OBJDIR_DEBUG)/src/BackgroundMonitor.o $(CFLAGS_DEBUG) -c src/BackgroundMonitor.cc
 
 $(OBJDIR_DEBUG)/src/Smartpen.o: src/Smartpen.cc
-	$(CC) -o $(OBJDIR_DEBUG)/src/Smartpen.o $(CFLAGS_DEBUG) $(INC_DEBUG) -c src/Smartpen.cc
+	$(CC) -o $(OBJDIR_DEBUG)/src/Smartpen.o $(CFLAGS_DEBUG) -c src/Smartpen.cc
 
 clean_debug:
 	rm $(OBJ_DEBUG) $(OUT_DEBUG)
@@ -101,25 +91,25 @@ build_release: before_release out_release after_release
 release: before_build build_release after_build
 
 out_release: $(OBJ_RELEASE) $(DEP_RELEASE)
-	$(LD) -o $(OUT_RELEASE) $(OBJ_RELEASE) $(LDFLAGS_RELEASE) $(LIBDIR_RELEASE) $(LIB_RELEASE)
+	$(LD) -o $(OUT_RELEASE) $(OBJ_RELEASE) $(LDFLAGS_RELEASE) $(LIBDIR_RELEASE)
 
 $(OBJDIR_RELEASE)/src/AboutDialog.o: src/AboutDialog.cc
-	$(CC) -o $(OBJDIR_RELEASE)/src/AboutDialog.o $(CFLAGS_RELEASE) $(INC_RELEASE) -c src/AboutDialog.cc
+	$(CC) -o $(OBJDIR_RELEASE)/src/AboutDialog.o $(CFLAGS_RELEASE) -c src/AboutDialog.cc
 
 $(OBJDIR_RELEASE)/src/DeviceInfo.o: src/DeviceInfo.cc
-	$(CC) -o $(OBJDIR_RELEASE)/src/DeviceInfo.o $(CFLAGS_RELEASE) $(INC_RELEASE) -c src/DeviceInfo.cc
+	$(CC) -o $(OBJDIR_RELEASE)/src/DeviceInfo.o $(CFLAGS_RELEASE) -c src/DeviceInfo.cc
 
 $(OBJDIR_RELEASE)/src/GUIFrame.o: src/GUIFrame.cc
-	$(CC) -o $(OBJDIR_RELEASE)/src/GUIFrame.o $(CFLAGS_RELEASE) $(INC_RELEASE) -c src/GUIFrame.cc
+	$(CC) -o $(OBJDIR_RELEASE)/src/GUIFrame.o $(CFLAGS_RELEASE) -c src/GUIFrame.cc
 
 $(OBJDIR_RELEASE)/src/LibreScribe.o: src/LibreScribe.cc
-	$(CC) -o $(OBJDIR_RELEASE)/src/LibreScribe.o $(CFLAGS_RELEASE) $(INC_RELEASE) -c src/LibreScribe.cc
+	$(CC) -o $(OBJDIR_RELEASE)/src/LibreScribe.o $(CFLAGS_RELEASE) -c src/LibreScribe.cc
 
 $(OBJDIR_RELEASE)/src/BackgroundMonitor.o: src/BackgroundMonitor.cc
-	$(CC) -o $(OBJDIR_RELEASE)/src/BackgroundMonitor.o $(CFLAGS_RELEASE) $(INC_RELEASE) -c src/BackgroundMonitor.cc
+	$(CC) -o $(OBJDIR_RELEASE)/src/BackgroundMonitor.o $(CFLAGS_RELEASE) -c src/BackgroundMonitor.cc
 
 $(OBJDIR_RELEASE)/src/Smartpen.o: src/Smartpen.cc
-	$(CC) -o $(OBJDIR_RELEASE)/src/Smartpen.o $(CFLAGS_RELEASE) $(INC_RELEASE) -c src/Smartpen.cc
+	$(CC) -o $(OBJDIR_RELEASE)/src/Smartpen.o $(CFLAGS_RELEASE) -c src/Smartpen.cc
 
 clean_release:
 	rm $(OBJ_RELEASE) $(OUT_RELEASE)
