@@ -21,15 +21,14 @@ struct libusb_device_handle *findSmartpen() {
     printf("\nentering findSmartpen()\n");
     libusb_device **devs = NULL; //pointer to pointer of device, used to retrieve a list of devices
     libusb_context *ctx = NULL; //a libusb session
-    int r; //for return values
     ssize_t cnt; //holding number of devices in list
     printf("initializing libusb...\n");
-    r = libusb_init(&ctx); //initialize a library session
+    libusb_init(&ctx); //initialize a library session
     libusb_set_debug(ctx, 3); //set verbosity level to 3, as suggested in the documentation
     printf("getting device list...\n");
     cnt = libusb_get_device_list(ctx, &devs); //get the list of devices
     if(cnt >= 0) {
-        printf("device count: %d\n",cnt);
+        printf("device count: %zu\n",cnt);
         ssize_t i; //for iterating through the list
         libusb_device_descriptor descriptor; //for getting information on the devices
         printf("checking for livescribe pen...\n");
@@ -163,7 +162,7 @@ Smartpen* Smartpen::connect(short vendor, short product) {
     obex_interface_t* obex_intf;
     obex_headerdata_t hd;
     int size, count;
-    Smartpen* smartpen;
+    Smartpen* smartpen = 0;
 
     while (true) {
         handle = OBEX_Init(OBEX_TRANS_USB, obex_event, 0);
@@ -291,12 +290,10 @@ bool Smartpen::putNamedObject(const char* name, const char* body) {
     //reference: http://dev.zuckschwerdt.org/openobex/doxygen/
     printf("Attempting to set \"%s\" to \"%s\"\n",name,body);
     struct obex_state *state;
-    int req_done;
     obex_object_t *obj;
     obex_headerdata_t hd;
     int name_size, body_size, i;
     glong nnum;
-    glong bnum;
     printf("getting obex state...\n");
     state = (obex_state*)OBEX_GetUserData(handle);
     OBEX_SetTransportMTU(handle, OBEX_MAXIMUM_MTU, OBEX_MAXIMUM_MTU);
@@ -396,7 +393,6 @@ int Smartpen::getGuid(FILE* out, const char* guid, long long int startTime) {
 
 const char* Smartpen::getPaperReplay(long long int startTime) {
     char name[256];
-    char *buf;
     int len;
 
     snprintf(name, sizeof(name), "lspdata?name=com.livescribe.paperreplay.PaperReplay&start_time=%lld&returnVersion=0.3&remoteCaller=WIN_LD_200", startTime);
@@ -564,6 +560,7 @@ bool Smartpen::resetPassword() {
 void Smartpen::getLspData(const char* object_name, long long int start_time) {
     char name[256];
     int len;
+	int ok;
     snprintf(name, sizeof(name), "lspdata?name=%s&start_time=%d",object_name,int(start_time));
     char* loc = (char*)malloc(snprintf(NULL, 0, "%s%s", "./data/", object_name) + 1);
     sprintf(loc, "%s%s", "./data/", object_name);
@@ -576,6 +573,9 @@ void Smartpen::getLspData(const char* object_name, long long int start_time) {
         fwrite(buf, len, 1, out);
         fclose(out);
         std::string cmd = "unzip -qq -o -d ./data/extracted/" + (std::string)object_name + " ./data/" + (std::string)object_name;
-        system(cmd.c_str()); //I know... this is a horrible way to unzip the files, but it's so easy!
+        ok = system(cmd.c_str()); //I know... this is a horrible way to unzip the files, but it's so easy!
+		if (ok == -1) {
+			printf("A problem occured unzipping.\n");
+		}
     }
 }
