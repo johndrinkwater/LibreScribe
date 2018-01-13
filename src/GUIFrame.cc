@@ -782,14 +782,14 @@ void GUIFrame::OnApplicationListColumnClick(wxListEvent& event) {
 }
 
 void GUIFrame::xdgOpenFile(const char* path) {
-    if (CheckIfFileExists("xdg/xdg-open")) {
-        printf("Attempting to open file: %s\n",path);
-        std::string cmd = "xdg/xdg-open ";
-        cmd = cmd + path;
-        system(cmd.c_str());
-    } else {
-        printf("Critical Error: xdg-open is not present. Cannot open file.\n");
-    }
+
+	printf("Attempting to open file: %s\n",path);
+	std::string cmd = "xdg-open ";
+	cmd = cmd + path;
+	system(cmd.c_str());
+    //} else {
+    //    printf("Critical Error: could not find xdg-open utility, cannot open file.\n");
+    //}
 }
 
 std::string GUIFrame::ConvertIntegerToString(int i) {
