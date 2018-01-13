@@ -500,7 +500,7 @@ const char* Smartpen::getName() {
             dN = dN.substr(2);
             printf("device name (hex): %s\n", dN.c_str());
             printf("From HEX: %s\n",from_hex(space_hex(dN)).c_str());
-            return from_hex(space_hex(dN)).c_str();
+            return strdup( from_hex(space_hex(dN)).c_str() );
         } else {
             printf("device name is not set.\n");
             return "(Unnamed Smartpen)";
