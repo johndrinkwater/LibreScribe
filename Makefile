@@ -49,12 +49,10 @@ all: before_build build_debug build_release after_build
 clean: clean_debug clean_release
 
 before_build:
-cd $(PROJECT_DIRECTORY) && rm -rfv ./bin
 
 after_build:
-cd $(PROJECT_DIRECTORY)
-find ./bin/ -mindepth 1 -maxdepth 1 -type d | xargs -n 1 cp -rfv -L ./res ./xdg
-find ./bin/ -mindepth 1 -maxdepth 1 -type d | xargs -n 1 cp -fv -L ./stf.py ./convert_stfs.sh
+	find ./bin/ -mindepth 1 -maxdepth 1 -type d | xargs -n 1 cp -rfv -L ./res ./xdg
+	find ./bin/ -mindepth 1 -maxdepth 1 -type d | xargs -n 1 cp -fv -L ./stf.py ./convert_stfs.sh
 
 before_debug:
 	mkdir -p ./bin/Debug
